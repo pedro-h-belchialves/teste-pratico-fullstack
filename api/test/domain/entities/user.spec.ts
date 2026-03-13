@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { User } from '../../../src/domain/entities/user/user'
+import { User } from '../../../src/domain/entities/account/user'
 import { Email } from '../../../src/domain/value-objects/email'
 
 describe('User', () => {
