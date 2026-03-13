@@ -31,6 +31,13 @@ export class Message {
   }
 
   static create(props: Omit<IMessage, 'id'> & { id?: string }) {
+    if (!props.role) {
+      throw new Error('Role is required')
+    }
+
+    if (!props.content) {
+      throw new Error('Content is required')
+    }
     return new Message({
       ...props,
       id: props.id ?? crypto.randomUUID(),
