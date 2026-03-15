@@ -6,7 +6,7 @@ import { MockedHash } from '../../../mock/services/mocked-hash'
 import { makeUser } from '../../../mock/factory/make-user'
 import { UserExistsError } from '../../../../src/application/use-cases/user/create/errors/user-exists-error'
 
-describe('create-user-use-case', () => {
+describe('CreateUserUseCase', () => {
   let hashService: IHashService
   let userRepository: InMemoryUserRepository
   let sut: CreateUserUseCase

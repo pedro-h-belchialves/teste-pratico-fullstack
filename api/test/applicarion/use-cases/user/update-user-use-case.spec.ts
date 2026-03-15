@@ -4,7 +4,7 @@ import { InMemoryUserRepository } from '../../../mock/repositories/in-memory-use
 import { makeUser } from '../../../mock/factory/make-user'
 import { UserNotExistsError } from '../../../../src/application/use-cases/user/update/errors/user-not-exists'
 
-describe('update-user-use-case', () => {
+describe('UpdateUserUseCase', () => {
   let userRepository: InMemoryUserRepository
   let sut: UpdateUserUseCase
 
