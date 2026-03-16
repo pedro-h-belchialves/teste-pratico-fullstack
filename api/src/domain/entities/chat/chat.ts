@@ -2,7 +2,7 @@ import { IMessage } from './message'
 
 export interface IChat {
   id: string
-  title: string
+  title?: string
   user_id: string
   messages: IMessage[]
 }
@@ -14,7 +14,7 @@ export class Chat {
     return this.props.id
   }
 
-  get title(): string {
+  get title(): string | undefined {
     return this.props.title
   }
 
