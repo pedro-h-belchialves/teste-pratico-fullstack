@@ -24,4 +24,8 @@ export class InMemoryAdminRepository implements IAdminRepository {
   async count(): Promise<number> {
     return this.admins.length
   }
+
+  async findByEmail(email: string): Promise<Admin | null> {
+    return this.admins.find((user) => user.email.getValue() === email) || null
+  }
 }
