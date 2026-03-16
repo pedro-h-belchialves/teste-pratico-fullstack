@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id         String   @id @unique @default(uuid())
+  email      String   @unique
+  password   String
+  name       String
+  created_at DateTime
+  updated_at DateTime
+  chats      Chat[]
+
+  @@map("users")
+}
+
+model Admin {
+  id         String   @id @unique @default(uuid())
+  email      String   @unique
+  password   String
+  created_at DateTime
+  updated_at DateTime
+
+  @@map("admins")
+}
+
+model Chat {
+  id         String    @id @unique @default(uuid())
+  title      String?
+  user_id    String
+  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade) // On cascate delete pois usuário pode ter mais de um chat, e ao ser excluído, os chats vinculados a ele também serão
+  created_at DateTime
+  updated_at DateTime
+  messages   Message[]
+
+  @@map("chats")
+}
+
+model Message {
+  id         String   @id @unique @default(uuid())
+  role       String
+  content    String
+  chat_id    String
+  chat       Chat     @relation(fields: [chat_id], references: [id], onDelete: Cascade) // da mesma forma ao deletar um chat as menssagens serao apagadas
+  created_at DateTime
+  updated_at DateTime
+
+  @@map("messages")
+}

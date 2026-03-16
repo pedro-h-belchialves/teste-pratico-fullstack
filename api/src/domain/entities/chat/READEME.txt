@@ -1,0 +1,3 @@
+Aqui eu coloquei message e chat denntro de chat pois chat é um exemplo de gragate, e message
+é uma entidade subordinada a entidade pai (agregate), com isso message também não tem repositórico, 
+com seu ciclo sendo feito através do repositório do Chat.

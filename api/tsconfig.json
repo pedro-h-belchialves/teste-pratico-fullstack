@@ -20,7 +20,8 @@
       "@domain/*": ["src/domain/*"],
       "@application/*": ["src/application/*"],
       "@infra/*": ["src/infra/*"],
-      "@test/*": ["src/test/*"]
+      "@test/*": ["src/test/*"],
+      "@generated/*": ["src/generated/*"]
     },
 
     "strict": true,

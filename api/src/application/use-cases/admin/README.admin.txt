@@ -1,3 +1,5 @@
-Eu Criei este use case de demonstrcão de uma entidade de Admin,
-esta conta seria usada para gerenciar o sistema, criar system prompt,
+Eu Criei estes use cases e a entidade Admin para fins de demonstrcão.
+
+Esta conta de Admin seria usada para gerenciar o sistema, criar system prompt,
 adicionar ou remover usuários...
+
