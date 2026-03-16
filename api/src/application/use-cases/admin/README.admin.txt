@@ -1,0 +1,3 @@
+Eu Criei este use case de demonstrcão de uma entidade de Admin,
+esta conta seria usada para gerenciar o sistema, criar system prompt,
+adicionar ou remover usuários...
