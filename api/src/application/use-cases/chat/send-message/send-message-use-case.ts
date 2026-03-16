@@ -3,11 +3,7 @@ import { MessageRole } from '@domain/entities/chat/message-role'
 import { IChatRepository } from '@domain/repositories/chat-repository-contract'
 import { SendMessageInput } from './send-message-input'
 import { IIaAgentService } from '@application/contracts/agent-service'
-
-type SendMessageOutput = {
-  userMessage: Message
-  assistantMessage: Message
-}
+import { SendMessageOutput } from './send-message-output'
 
 export class SendMessageUseCase {
   constructor(
@@ -43,8 +39,10 @@ export class SendMessageUseCase {
     await this.chatRepository.save(chat)
 
     return {
-      userMessage,
-      assistantMessage,
+      messages: chat.messages.map((message) => ({
+        role: message.role,
+        content: message.content,
+      })),
     }
   }
 }
