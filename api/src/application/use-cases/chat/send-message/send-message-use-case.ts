@@ -26,6 +26,7 @@ export class SendMessageUseCase {
 
     chat.addMessage(userMessage)
 
+    // Aqui eu implementei o contrato, pois caso precise alterar a implementação do IA, eu implemento no servico
     const aiResponse = await this.iaService.generateResponse()
 
     const assistantMessage = Message.create({

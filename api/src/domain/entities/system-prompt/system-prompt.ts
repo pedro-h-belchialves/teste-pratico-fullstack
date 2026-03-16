@@ -3,6 +3,7 @@ export type ISystemPrompt = {
   content: string
 }
 
+// Esta entidade não será usada no teste, mas caso o produto fosse real ele seria a configuraão do prompt
 export class SystemPrompt {
   private props: ISystemPrompt
   get id(): string {
