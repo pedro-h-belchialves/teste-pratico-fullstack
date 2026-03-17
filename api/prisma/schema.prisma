@@ -8,23 +8,23 @@ datasource db {
 }
 
 model User {
-  id         String   @id @unique @default(uuid())
-  email      String   @unique
+  id         String    @id @unique @default(uuid())
+  email      String    @unique
   password   String
   name       String
-  created_at DateTime
-  updated_at DateTime
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
   chats      Chat[]
 
   @@map("users")
 }
 
 model Admin {
-  id         String   @id @unique @default(uuid())
-  email      String   @unique
+  id         String    @id @unique @default(uuid())
+  email      String    @unique
   password   String
-  created_at DateTime
-  updated_at DateTime
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
 
   @@map("admins")
 }
@@ -34,21 +34,21 @@ model Chat {
   title      String?
   user_id    String
   user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade) // On cascate delete pois usuário pode ter mais de um chat, e ao ser excluído, os chats vinculados a ele também serão
-  created_at DateTime
-  updated_at DateTime
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
   messages   Message[]
 
   @@map("chats")
 }
 
 model Message {
-  id         String   @id @unique @default(uuid())
+  id         String    @id @unique @default(uuid())
   role       String
   content    String
   chat_id    String
-  chat       Chat     @relation(fields: [chat_id], references: [id], onDelete: Cascade) // da mesma forma ao deletar um chat as menssagens serao apagadas
-  created_at DateTime
-  updated_at DateTime
+  chat       Chat      @relation(fields: [chat_id], references: [id], onDelete: Cascade) // da mesma forma ao deletar um chat as menssagens serao apagadas
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
 
   @@map("messages")
 }

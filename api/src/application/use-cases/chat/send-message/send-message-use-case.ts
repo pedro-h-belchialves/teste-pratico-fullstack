@@ -37,7 +37,7 @@ export class SendMessageUseCase {
 
     chat.addMessage(assistantMessage)
 
-    await this.chatRepository.save(chat)
+    await this.chatRepository.update(chat)
 
     return {
       messages: chat.messages.map((message) => ({
