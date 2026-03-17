@@ -1,6 +1,8 @@
-import { Link, LogOut, User } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 import { Avatar } from "../ui/Avatar";
 import { Button } from "../ui/Button";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../hooks/use-auth";
 
 export function Header() {
   const { user, handleLogout } = useAuth();
@@ -31,7 +33,4 @@ export function Header() {
       </div>
     </header>
   );
-}
-function useAuth(): { user: any; handleLogout: any } {
-  throw new Error("Function not implemented.");
 }

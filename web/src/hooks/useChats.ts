@@ -23,6 +23,7 @@ export function useChats(userId: string | undefined) {
     setError(null);
     try {
       const data = await getChatsByUser(userId);
+
       setChats(data);
     } catch {
       setError("Erro ao carregar conversas");
@@ -50,7 +51,8 @@ export function useChats(userId: string | undefined) {
     setLoading(true);
     setError(null);
     try {
-      const newChat = await createChat();
+      const newChat = await createChat(userId);
+
       const fullChat: Chat = { ...newChat, messages: [] };
       setChats((prev) => [fullChat, ...prev]);
       setActiveChat(fullChat);
@@ -62,12 +64,13 @@ export function useChats(userId: string | undefined) {
     }
   }
 
-  async function sendChatMessage(content: string) {
+  async function sendChatMessage(message: string) {
     if (!activeChat) return;
     setSending(true);
     setError(null);
     try {
-      const updated = await sendMessage(activeChat.id, { content });
+      const updated = await sendMessage(activeChat.id, { message });
+
       setMessages(updated);
     } catch {
       setError("Erro ao enviar mensagem");

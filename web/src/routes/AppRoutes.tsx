@@ -4,6 +4,7 @@ import { Spinner } from "../components/ui/Spinner";
 import LoginPage from "../pages/LoginPaage";
 import ChatPage from "../pages/ChatPage";
 import RegisterPage from "../pages/RegisterPage";
+import ProfilePage from "../pages/ProfilePage";
 
 export function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuthContext();
@@ -61,6 +62,15 @@ export default function AppRoutes() {
           <PublicRoute>
             <RegisterPage />
           </PublicRoute>
+        }
+      />
+
+      <Route
+        path="/profile"
+        element={
+          <PrivateRoute>
+            <ProfilePage />
+          </PrivateRoute>
         }
       />
     </Routes>

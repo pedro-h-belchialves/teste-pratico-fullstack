@@ -1,10 +1,12 @@
-import type { Message } from "react-hook-form";
 import api from "../api/axios";
 import type { Chat, CreateChatResponse } from "../types/chat";
-import type { SendMessagePayload } from "../types/message";
+import type { Message, SendMessagePayload } from "../types/message";
 
-export async function createChat(): Promise<CreateChatResponse> {
-  const response = await api.post<CreateChatResponse>("/chats");
+export async function createChat(user_id: string): Promise<CreateChatResponse> {
+  const response = await api.post<CreateChatResponse>("/chats", {
+    user_id: user_id,
+  });
+
   return response.data;
 }
 
@@ -14,17 +16,17 @@ export async function getChatById(id: string): Promise<Chat> {
 }
 
 export async function getChatsByUser(userId: string): Promise<Chat[]> {
-  const response = await api.get<Chat[]>(`/chats/user/${userId}`);
-  return response.data;
+  const response = await api.get<{ chats: Chat[] }>(`/chats/user/${userId}`);
+  return response.data.chats;
 }
 
 export async function sendMessage(
   chatId: string,
   payload: SendMessagePayload,
 ): Promise<Message[]> {
-  const response = await api.post<Message[]>(
+  const response = await api.post<{ messages: Message[] }>(
     `/chats/${chatId}/message`,
     payload,
   );
-  return response.data as Message[];
+  return response.data.messages;
 }

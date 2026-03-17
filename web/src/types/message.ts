@@ -9,5 +9,5 @@ export interface Message {
 }
 
 export interface SendMessagePayload {
-  content: string;
+  message: string;
 }
