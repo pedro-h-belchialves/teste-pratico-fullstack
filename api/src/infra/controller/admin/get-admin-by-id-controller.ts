@@ -1,45 +1,54 @@
-import { FastifyReply, FastifyRequest } from 'fastify'
-import { ZodError } from 'zod'
-
 import { GetAdminByIdUseCase } from '@application/use-cases/admin/get-admin-by-id/get-admin-by-id-use-case'
-
 import { AdminNotFoundError } from '@application/use-cases/admin/get-admin-by-id/errors/admin-not-found'
 import {
   getAdminByIdParamsSchema,
   getAdminByIdResponseSchema,
 } from '@infra/schema/admin/get-admin-by-id-schema'
+import { IHttpRequest } from '@infra/http/contracts/http-request-contract'
 
 export class GetAdminByIdController {
   constructor(private readonly getAdminByIdUseCase: GetAdminByIdUseCase) {}
 
-  async handle(request: FastifyRequest, reply: FastifyReply) {
+  async handle(httpRequest: IHttpRequest) {
     try {
-      const params = getAdminByIdParamsSchema.parse(request.params)
+      const validation = getAdminByIdParamsSchema.safeParse(httpRequest.params)
 
-      const result = await this.getAdminByIdUseCase.execute(params.id)
+      if (!validation.success) {
+        return {
+          statusCode: 400,
+          body: {
+            message: 'Validation error',
+            issues: validation.error.flatten(),
+          },
+        }
+      }
+
+      const { id } = validation.data
+
+      const result = await this.getAdminByIdUseCase.execute(id)
 
       const output = getAdminByIdResponseSchema.parse(result)
 
-      return reply.status(200).send(output)
+      return {
+        statusCode: 200,
+        body: output,
+      }
     } catch (error) {
-      if (error instanceof ZodError) {
-        return reply.status(400).send({
-          message: 'Validation error',
-          issues: error.flatten(),
-        })
-      }
-
       if (error instanceof AdminNotFoundError) {
-        return reply.status(404).send({
-          message: error.message,
-        })
+        return {
+          statusCode: 404,
+          body: {
+            message: error.message,
+          },
+        }
       }
 
-      request.log.error(error)
-
-      return reply.status(500).send({
-        message: 'Internal server error',
-      })
+      return {
+        statusCode: 500,
+        body: {
+          message: 'Internal server error',
+        },
+      }
     }
   }
 }

@@ -1,37 +1,48 @@
-import { FastifyReply, FastifyRequest } from 'fastify'
-import { ZodError } from 'zod'
-
 import { SendMessageUseCase } from '@application/use-cases/chat/send-message/send-message-use-case'
 import {
   sendMessageBodySchema,
   sendMessageResponseSchema,
 } from '@infra/schema/chat/send-message-schema'
+import { IHttpRequest } from '@infra/http/contracts/http-request-contract'
 
 export class SendMessageController {
   constructor(private readonly sendMessageUseCase: SendMessageUseCase) {}
 
-  async handle(request: FastifyRequest, reply: FastifyReply) {
+  async handle(httpRequest: IHttpRequest) {
+    console.log(httpRequest.body)
+    console.log(httpRequest.params.id)
     try {
-      const body = sendMessageBodySchema.parse(request.body)
+      const validation = sendMessageBodySchema.safeParse({
+        ...httpRequest.body,
+        chatId: httpRequest.params.id,
+      })
 
-      const result = await this.sendMessageUseCase.execute(body)
+      if (!validation.success) {
+        return {
+          statusCode: 400,
+          body: {
+            message: 'Validation error',
+            issues: validation.error.flatten(),
+          },
+        }
+      }
+
+      const result = await this.sendMessageUseCase.execute(validation.data)
 
       const output = sendMessageResponseSchema.parse(result)
 
-      return reply.status(200).send(output)
-    } catch (error) {
-      if (error instanceof ZodError) {
-        return reply.status(400).send({
-          message: 'Validation error',
-          issues: error.flatten(),
-        })
+      return {
+        statusCode: 200,
+        body: output,
       }
-
-      request.log.error(error)
-
-      return reply.status(500).send({
-        message: 'Internal server error',
-      })
+    } catch (error) {
+      console.log(error)
+      return {
+        statusCode: 500,
+        body: {
+          message: 'Internal server error',
+        },
+      }
     }
   }
 }

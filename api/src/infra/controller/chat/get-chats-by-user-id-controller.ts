@@ -1,46 +1,58 @@
-import { FastifyReply, FastifyRequest } from 'fastify'
-import { ZodError } from 'zod'
-
 import { UserNotFoundError } from '@application/use-cases/chat/create/errors/user-not-found'
 import { GetChatsByUserIdUseCase } from '@application/use-cases/chat/get-chat-by-user-id/get-chats-by-user-id'
 import {
   getChatsByUserIdParamsSchema,
   getChatsByUserIdResponseSchema,
 } from '@infra/schema/chat/get-chats-by-user-id-schema'
+import { IHttpRequest } from '@infra/http/contracts/http-request-contract'
 
 export class GetChatsByUserIdController {
   constructor(
     private readonly getChatsByUserIdUseCase: GetChatsByUserIdUseCase,
   ) {}
 
-  async handle(request: FastifyRequest, reply: FastifyReply) {
+  async handle(httpRequest: IHttpRequest) {
     try {
-      const { user_id } = getChatsByUserIdParamsSchema.parse(request.params)
+      const validation = getChatsByUserIdParamsSchema.safeParse(
+        httpRequest.params,
+      )
+
+      if (!validation.success) {
+        return {
+          statusCode: 400,
+          body: {
+            message: 'Validation error',
+            issues: validation.error.flatten(),
+          },
+        }
+      }
+
+      const { user_id } = validation.data
 
       const result = await this.getChatsByUserIdUseCase.execute(user_id)
 
       const output = getChatsByUserIdResponseSchema.parse(result)
 
-      return reply.status(200).send(output)
+      return {
+        statusCode: 200,
+        body: output,
+      }
     } catch (error) {
       if (error instanceof UserNotFoundError) {
-        return reply.status(404).send({
-          message: 'User not found',
-        })
+        return {
+          statusCode: 404,
+          body: {
+            message: 'User not found',
+          },
+        }
       }
 
-      if (error instanceof ZodError) {
-        return reply.status(400).send({
-          message: 'Validation error',
-          issues: error.flatten(),
-        })
+      return {
+        statusCode: 500,
+        body: {
+          message: 'Internal server error',
+        },
       }
-
-      request.log.error(error)
-
-      return reply.status(500).send({
-        message: 'Internal server error',
-      })
     }
   }
 }

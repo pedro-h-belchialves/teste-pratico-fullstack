@@ -1,39 +1,49 @@
-import { FastifyReply, FastifyRequest } from 'fastify'
-import { ZodError } from 'zod'
-
 import { DeleteUserUseCase } from '@application/use-cases/user/delete/delete-user-use-case'
 import { UserNotExistsError } from '@application/use-cases/user/delete/erros/user-not-exists'
 import { deleteUserParamsSchema } from '@infra/schema/user/delete-user-schema'
+import { IHttpRequest } from '@infra/http/contracts/http-request-contract'
 
 export class DeleteUserController {
   constructor(private readonly deleteUserUseCase: DeleteUserUseCase) {}
 
-  async handle(request: FastifyRequest, reply: FastifyReply) {
+  async handle(httpRequest: IHttpRequest) {
     try {
-      const { id } = deleteUserParamsSchema.parse(request.params)
+      const validation = deleteUserParamsSchema.safeParse(httpRequest.params)
+
+      if (!validation.success) {
+        return {
+          statusCode: 400,
+          body: {
+            message: 'Validation error',
+            issues: validation.error.flatten(),
+          },
+        }
+      }
+
+      const { id } = validation.data
 
       await this.deleteUserUseCase.execute(id)
 
-      return reply.status(204).send()
+      return {
+        statusCode: 204,
+        body: null,
+      }
     } catch (error) {
       if (error instanceof UserNotExistsError) {
-        return reply.status(404).send({
-          message: 'User not found',
-        })
+        return {
+          statusCode: 404,
+          body: {
+            message: 'User not found',
+          },
+        }
       }
 
-      if (error instanceof ZodError) {
-        return reply.status(400).send({
-          message: 'Validation error',
-          issues: error.flatten(),
-        })
+      return {
+        statusCode: 500,
+        body: {
+          message: 'Internal server error',
+        },
       }
-
-      request.log.error(error)
-
-      return reply.status(500).send({
-        message: 'Internal server error',
-      })
     }
   }
 }

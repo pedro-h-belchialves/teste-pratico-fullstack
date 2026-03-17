@@ -1,46 +1,54 @@
-import { FastifyReply, FastifyRequest } from 'fastify'
-import { ZodError } from 'zod'
-
 import { CreateFirstAdminUseCase } from '@application/use-cases/admin/create/crete-first-admin-use-case'
 import { AdminAlreadyExists } from '@application/use-cases/admin/create/errors/admin-already-exists'
 import {
   createFirstAdminBodySchema,
   createFirstAdminResponseSchema,
 } from '@infra/schema/admin/create-first-admin-schema'
+import { IHttpRequest } from '@infra/http/contracts/http-request-contract'
 
 export class CreateFirstAdminController {
   constructor(
     private readonly createFirstAdminUseCase: CreateFirstAdminUseCase,
   ) {}
 
-  async handle(request: FastifyRequest, reply: FastifyReply) {
+  async handle(httpRequest: IHttpRequest) {
     try {
-      const body = createFirstAdminBodySchema.parse(request.body)
+      const validation = createFirstAdminBodySchema.safeParse(httpRequest.body)
 
-      const result = await this.createFirstAdminUseCase.execute(body)
+      if (!validation.success) {
+        return {
+          statusCode: 400,
+          body: {
+            message: 'Validation error',
+            issues: validation.error.flatten(),
+          },
+        }
+      }
+
+      const result = await this.createFirstAdminUseCase.execute(validation.data)
 
       const output = createFirstAdminResponseSchema.parse(result)
 
-      return reply.status(201).send(output)
+      return {
+        statusCode: 201,
+        body: output,
+      }
     } catch (error) {
-      if (error instanceof ZodError) {
-        return reply.status(400).send({
-          message: 'Validation error',
-          issues: error.flatten(),
-        })
-      }
-
       if (error instanceof AdminAlreadyExists) {
-        return reply.status(409).send({
-          message: error.message,
-        })
+        return {
+          statusCode: 409,
+          body: {
+            message: error.message,
+          },
+        }
       }
 
-      request.log.error(error)
-
-      return reply.status(500).send({
-        message: 'Internal server error',
-      })
+      return {
+        statusCode: 500,
+        body: {
+          message: 'Internal server error',
+        },
+      }
     }
   }
 }

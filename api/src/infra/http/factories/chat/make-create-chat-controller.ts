@@ -4,7 +4,7 @@ import { CreateChatController } from '@infra/controller/chat/create-chat-control
 import { PrismaChatRepository } from '@infra/repositories/prisma/prisma-chat-repository'
 import { PrismaUserRepository } from '@infra/repositories/prisma/prisma-user-repository'
 
-export const maakeCreateChatController = () => {
+export const makeCreateChatController = () => {
   const userRepository = new PrismaUserRepository()
   const findUserByIdUseCase = new FindUserByIdUseCase(userRepository)
   const chatRepository = new PrismaChatRepository()

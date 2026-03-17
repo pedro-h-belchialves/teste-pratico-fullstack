@@ -1,47 +1,69 @@
-import { FastifyReply, FastifyRequest } from 'fastify'
-import { ZodError } from 'zod'
-
 import { UpdateUserUseCase } from '@application/use-cases/user/update/update-user-use-case'
 import { UserNotExistsError } from '@application/use-cases/user/update/errors/user-not-exists'
 import {
   updateUserBodySchema,
   updateUserParamsSchema,
 } from '@infra/schema/user/update-user-schema'
+import { IHttpRequest } from '@infra/http/contracts/http-request-contract'
 
 export class UpdateUserController {
   constructor(private readonly updateUserUseCase: UpdateUserUseCase) {}
 
-  async handle(request: FastifyRequest, reply: FastifyReply) {
+  async handle(httpRequest: IHttpRequest) {
     try {
-      const { id } = updateUserParamsSchema.parse(request.params)
+      const paramsValidation = updateUserParamsSchema.safeParse(
+        httpRequest.params,
+      )
 
-      const body = updateUserBodySchema.parse(request.body)
+      if (!paramsValidation.success) {
+        return {
+          statusCode: 400,
+          body: {
+            message: 'Validation error',
+            issues: paramsValidation.error.flatten(),
+          },
+        }
+      }
+
+      const bodyValidation = updateUserBodySchema.safeParse(httpRequest.body)
+
+      if (!bodyValidation.success) {
+        return {
+          statusCode: 400,
+          body: {
+            message: 'Validation error',
+            issues: bodyValidation.error.flatten(),
+          },
+        }
+      }
+
+      const { id } = paramsValidation.data
 
       await this.updateUserUseCase.execute({
         id,
-        ...body,
+        ...bodyValidation.data,
       })
 
-      return reply.status(204).send()
+      return {
+        statusCode: 204,
+        body: null,
+      }
     } catch (error) {
       if (error instanceof UserNotExistsError) {
-        return reply.status(404).send({
-          message: 'User not found',
-        })
+        return {
+          statusCode: 404,
+          body: {
+            message: 'User not found',
+          },
+        }
       }
 
-      if (error instanceof ZodError) {
-        return reply.status(400).send({
-          message: 'Validation error',
-          issues: error.flatten(),
-        })
+      return {
+        statusCode: 500,
+        body: {
+          message: 'Internal server error',
+        },
       }
-
-      request.log.error(error)
-
-      return reply.status(500).send({
-        message: 'Internal server error',
-      })
     }
   }
 }

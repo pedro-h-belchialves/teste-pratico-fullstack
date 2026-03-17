@@ -1,6 +1,3 @@
-import { FastifyReply, FastifyRequest } from 'fastify'
-import { ZodError } from 'zod'
-
 import { AuthenticateUseCase } from '@application/use-cases/auth/authenticate-use-case'
 import { AccountNotFoundError } from '@application/use-cases/auth/errors/account-not-found'
 import { InvalidPasswordError } from '@application/use-cases/auth/errors/invalid-password'
@@ -8,44 +5,60 @@ import {
   authenticateBodySchema,
   authenticateResponseSchema,
 } from '@infra/schema/auth/authenticate-schema'
+import { IHttpRequest } from '@infra/http/contracts/http-request-contract'
 
 export class AuthenticateController {
   constructor(private readonly authenticateUseCase: AuthenticateUseCase) {}
 
-  async handle(request: FastifyRequest, reply: FastifyReply) {
+  async handle(httpRequest: IHttpRequest) {
     try {
-      const body = authenticateBodySchema.parse(request.body)
+      const validation = authenticateBodySchema.safeParse(httpRequest.body)
 
-      const result = await this.authenticateUseCase.execute(body)
+      if (!validation.success) {
+        return {
+          statusCode: 400,
+          body: {
+            message: 'Validation error',
+            issues: validation.error.flatten(),
+          },
+        }
+      }
+
+      const result = await this.authenticateUseCase.execute(validation.data)
 
       const output = authenticateResponseSchema.parse(result)
 
-      return reply.status(200).send(output)
+      return {
+        statusCode: 200,
+        body: output,
+      }
     } catch (error) {
       if (error instanceof AccountNotFoundError) {
-        return reply.status(404).send({
-          message: 'Account not found',
-        })
+        console.error(error)
+        return {
+          statusCode: 404,
+          body: {
+            message: 'Account not found',
+          },
+        }
       }
 
       if (error instanceof InvalidPasswordError) {
-        return reply.status(401).send({
-          message: 'Invalid password',
-        })
+        return {
+          statusCode: 401,
+          body: {
+            message: 'Invalid password',
+          },
+        }
       }
 
-      if (error instanceof ZodError) {
-        return reply.status(400).send({
-          message: 'Validation error',
-          issues: error.flatten(),
-        })
+      console.error(error)
+      return {
+        statusCode: 500,
+        body: {
+          message: 'Internal server error',
+        },
       }
-
-      request.log.error(error)
-
-      return reply.status(500).send({
-        message: 'Internal server error',
-      })
     }
   }
 }

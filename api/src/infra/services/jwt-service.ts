@@ -6,7 +6,7 @@ import {
 
 export class JwtService implements IJwtService {
   sign(payload: JwtPayloadProps): string {
-    const token = jwt.sign(payload, process.env.JWT_SECRET || '', {
+    const token = jwt.sign(payload, process.env.JWT_SECRET || 'secret', {
       expiresIn: '30d',
     })
 
@@ -16,7 +16,7 @@ export class JwtService implements IJwtService {
   verify(token: string): JwtPayloadProps {
     const payload = jwt.verify(
       token,
-      process.env.JWT_SECRET || '',
+      process.env.JWT_SECRET || 'secret',
     ) as JwtPayloadProps
     return payload
   }
