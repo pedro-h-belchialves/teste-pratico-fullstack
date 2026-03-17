@@ -11,7 +11,6 @@ export class AuthenticateController {
   constructor(private readonly authenticateUseCase: AuthenticateUseCase) {}
 
   async handle(httpRequest: IHttpRequest) {
-    console.log(httpRequest.body)
     try {
       const validation = authenticateBodySchema.safeParse(httpRequest.body)
 
@@ -29,7 +28,6 @@ export class AuthenticateController {
 
       const output = authenticateResponseSchema.parse(result)
 
-      console.log(output)
       return {
         statusCode: 200,
         body: output,
