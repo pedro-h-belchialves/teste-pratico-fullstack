@@ -29,7 +29,6 @@ export function useAuth() {
 
       navigate("/chat");
     } catch (err: unknown) {
-      alert(err);
       const message = extractErrorMessage(err) || "Credenciais inválidas";
       setError(message);
     } finally {
