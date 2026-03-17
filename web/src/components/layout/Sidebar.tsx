@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import type { Chat } from "../types/chat";
+import type { Chat } from "../../types/chat";
 import { MessageSquare, Plus, PanelLeftClose, PanelLeft } from "lucide-react";
 import { Button } from "../ui/Button";
 import { Spinner } from "../ui/Spinner";
