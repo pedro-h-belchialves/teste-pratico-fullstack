@@ -7,6 +7,7 @@ import { getUserById } from "../services/user.service";
 import { login, register } from "../services/auth.service";
 
 export function useAuth() {
+  console.log("useAuth");
   const { user, isAuthenticated, isLoading, setSession, logout } =
     useAuthContext();
   const [loading, setLoading] = useState(false);

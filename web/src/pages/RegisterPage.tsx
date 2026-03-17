@@ -2,28 +2,28 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link } from "react-router-dom";
-
+import { useAuth } from "../hooks/use-auth";
 import { Card, CardBody } from "../components/ui/Card";
 import { Input } from "../components/ui/Input";
-import { useAuth } from "../hooks/use-auth";
 import { Button } from "../components/ui/Button";
 
-const loginSchema = z.object({
-  email: z.email("E-mail inválido"),
+const registerSchema = z.object({
+  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  email: z.string().email("E-mail inválido"),
   password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
 });
 
-type LoginFormData = z.infer<typeof loginSchema>;
+type RegisterFormData = z.infer<typeof registerSchema>;
 
-export default function LoginPage() {
-  const { handleLogin, loading, error } = useAuth();
+export default function RegisterPage() {
+  const { handleRegister, loading, error } = useAuth();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
   });
 
   return (
@@ -32,16 +32,24 @@ export default function LoginPage() {
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold text-indigo-600">AI Chat</h1>
           <p className="mt-1 text-sm text-gray-500">
-            Entre na sua conta para continuar
+            Crie sua conta gratuitamente
           </p>
         </div>
 
         <Card>
           <CardBody>
             <form
-              onSubmit={handleSubmit(handleLogin)}
+              onSubmit={handleSubmit(handleRegister)}
               className="flex flex-col gap-4"
             >
+              <Input
+                id="name"
+                label="Nome"
+                type="text"
+                placeholder="Seu nome"
+                error={errors.name?.message}
+                {...register("name")}
+              />
               <Input
                 id="email"
                 label="E-mail"
@@ -66,16 +74,16 @@ export default function LoginPage() {
               )}
 
               <Button type="submit" loading={loading} className="mt-2 w-full">
-                Entrar
+                Criar conta
               </Button>
 
               <p className="text-center text-sm text-gray-500">
-                Não tem conta?{" "}
+                Já tem conta?{" "}
                 <Link
-                  to="/register"
+                  to="/login"
                   className="font-medium text-indigo-600 hover:underline"
                 >
-                  Criar conta
+                  Entrar
                 </Link>
               </p>
             </form>

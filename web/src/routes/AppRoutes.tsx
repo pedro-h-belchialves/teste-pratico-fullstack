@@ -2,6 +2,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthContext } from "../contexts/auth-context";
 import { Spinner } from "../components/ui/Spinner";
 import LoginPage from "../pages/LoginPaage";
+import ChatPage from "../pages/ChatPage";
+import RegisterPage from "../pages/RegisterPage";
 
 export function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuthContext();
@@ -40,6 +42,24 @@ export default function AppRoutes() {
         element={
           <PublicRoute>
             <LoginPage />
+          </PublicRoute>
+        }
+      />
+
+      <Route
+        path="/chat"
+        element={
+          <PrivateRoute>
+            <ChatPage />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/register"
+        element={
+          <PublicRoute>
+            <RegisterPage />
           </PublicRoute>
         }
       />
