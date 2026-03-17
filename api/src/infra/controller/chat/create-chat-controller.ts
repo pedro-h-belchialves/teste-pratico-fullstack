@@ -41,6 +41,7 @@ export class CreateChatController {
         }
       }
 
+      console.error(error)
       return {
         statusCode: 500,
         body: {

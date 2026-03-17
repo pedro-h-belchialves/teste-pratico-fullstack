@@ -9,8 +9,6 @@ export class SendMessageController {
   constructor(private readonly sendMessageUseCase: SendMessageUseCase) {}
 
   async handle(httpRequest: IHttpRequest) {
-    console.log(httpRequest.body)
-    console.log(httpRequest.params.id)
     try {
       const validation = sendMessageBodySchema.safeParse({
         ...httpRequest.body,

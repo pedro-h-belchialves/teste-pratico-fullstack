@@ -47,6 +47,7 @@ export class GetChatsByUserIdController {
         }
       }
 
+      console.error(error)
       return {
         statusCode: 500,
         body: {

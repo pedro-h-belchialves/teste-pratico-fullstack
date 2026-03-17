@@ -11,22 +11,8 @@ export class PrismaChatRepository implements IChatRepository {
 
     await prisma.chat.create({
       data: {
-        id: 'chat-id',
-        user_id: 'user-id',
-        messages: {
-          create: [
-            {
-              id: 'message-id',
-              role: 'user',
-              content: 'oi',
-            },
-            {
-              id: 'message-id-2',
-              role: 'assistant',
-              content: "I'm here to help!",
-            },
-          ],
-        },
+        id: chat.id,
+        user_id: chat.user_id,
       },
     })
   }

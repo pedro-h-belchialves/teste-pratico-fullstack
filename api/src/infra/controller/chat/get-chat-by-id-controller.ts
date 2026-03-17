@@ -43,6 +43,7 @@ export class GetChatByIdController {
         }
       }
 
+      console.error(error)
       return {
         statusCode: 500,
         body: {
