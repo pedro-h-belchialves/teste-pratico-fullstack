@@ -21,7 +21,7 @@ interface AuthContextValue {
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  setSession: (token: string, user: User) => void;
+  setSession: (token: string, user?: User) => void;
   logout: () => void;
 }
 
@@ -59,11 +59,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, []);
 
-  function setSession(newToken: string, newUser: User) {
+  function setSession(newToken: string, newUser?: User) {
     saveToken(newToken);
-    saveUser(newUser);
     setToken(newToken);
-    setUser(newUser);
+    if (newUser) {
+      saveUser(newUser);
+      setUser(newUser);
+    }
   }
 
   function logout() {

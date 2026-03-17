@@ -16,7 +16,8 @@ export interface RegisterPayload {
 }
 
 export interface LoginResponse {
-  token: string;
+  access_token: string;
+  account_id: string;
   user?: User;
 }
 

@@ -7,7 +7,6 @@ import { getUserById } from "../services/user.service";
 import { login, register } from "../services/auth.service";
 
 export function useAuth() {
-  console.log("useAuth");
   const { user, isAuthenticated, isLoading, setSession, logout } =
     useAuthContext();
   const [loading, setLoading] = useState(false);
@@ -18,13 +17,19 @@ export function useAuth() {
     setLoading(true);
     setError(null);
     try {
-      const { token } = await login(payload);
-      const decoded = parseJwt(token);
-      const userId = String(decoded?.id || decoded?.sub);
+      const { access_token, account_id } = await login(payload);
+
+      const userId = account_id;
+
+      setSession(access_token);
+
       const fetchedUser = await getUserById(userId);
-      setSession(token, fetchedUser);
+
+      setSession(access_token, fetchedUser);
+
       navigate("/chat");
     } catch (err: unknown) {
+      alert(err);
       const message = extractErrorMessage(err) || "Credenciais inválidas";
       setError(message);
     } finally {
@@ -61,15 +66,6 @@ export function useAuth() {
     handleRegister,
     handleLogout,
   };
-}
-
-function parseJwt(token: string): Record<string, unknown> | null {
-  try {
-    const base64 = token.split(".")[1];
-    return JSON.parse(atob(base64));
-  } catch {
-    return null;
-  }
 }
 
 function extractErrorMessage(err: unknown): string | null {
