@@ -27,7 +27,16 @@ export class SendMessageUseCase {
     chat.addMessage(userMessage)
 
     // Aqui eu implementei o contrato, pois caso precise alterar a implementação do IA, eu implemento no servico
-    const aiResponse = await this.iaService.generateResponse()
+    const aiResponse = await this.iaService.generateResponse(
+      chat.messages,
+
+      // aqui eu passo o system prompt dinamicamente, em um projeto real eu pegaria o isso daa entidade system prompt
+      // além de melhorar significativamente a experiencia do usuario, eu poderiaa deixá-lo mais dimanico com o. metadado do usuário
+      // e uma tool de capitar personalizada do usuário e salváalas, deixando uma experiencia mais personalizada
+      `
+      Voce é um agente de atendimennto e tem a missão de responder as dúvidas do cliente.
+      `,
+    )
 
     const assistantMessage = Message.create({
       role: MessageRole.ASSISTANT,

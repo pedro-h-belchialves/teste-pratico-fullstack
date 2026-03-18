@@ -1,3 +1,6 @@
 export interface IIaAgentService {
-  generateResponse(): Promise<string>
+  generateResponse(
+    messages: { role: string; content: string }[],
+    systemPrompt?: string,
+  ): Promise<string>
 }

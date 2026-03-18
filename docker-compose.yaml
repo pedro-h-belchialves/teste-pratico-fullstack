@@ -19,9 +19,12 @@ services:
     container_name: chat-api
     ports:
       - "4000:4000"
+    env_file:
+      - ./api/.env
     environment:
       DATABASE_URL: postgresql://meuusuario:senha123@postgres:5432/fullstack-test?schema=public
       PORT: 4000
+
     depends_on:
       - postgres
     networks:
