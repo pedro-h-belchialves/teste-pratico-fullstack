@@ -39,7 +39,10 @@ export function ChatContainer({
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      <MessageList messages={messages} userName={userName} />
+      <MessageList
+        messages={messages.filter((m) => m.role !== "system")}
+        userName={userName}
+      />
       <MessageInput onSend={onSend} loading={sending} />
     </div>
   );

@@ -80,9 +80,7 @@ export function Sidebar({
               )}
             >
               <MessageSquare size={15} className="shrink-0" />
-              {!collapsed && (
-                <span className="truncate">Chat {chat.id.slice(0, 8)}</span>
-              )}
+              {!collapsed && <span className="truncate">{chat.title}</span>}
             </button>
           ))
         )}

@@ -3,6 +3,7 @@ import type { Message } from "./message";
 export interface Chat {
   id: string;
   userId: string;
+  title?: string;
   createdAt: string;
   messages?: Message[];
 }

@@ -26,6 +26,17 @@ export class SendMessageUseCase {
 
     chat.addMessage(userMessage)
 
+    if (!chat.title) {
+      const chatTitle = await this.iaService.generateResponse(
+        [],
+        `Seu objetivo é gerar um título para o chat de ${input.message}, que seja breve e direto. `,
+      )
+
+      chat.updateTitle(chatTitle)
+
+      await this.chatRepository.update(chat)
+    }
+
     // Aqui eu implementei o contrato, pois caso precise alterar a implementação do IA, eu implemento no servico
     const aiResponse = await this.iaService.generateResponse(
       chat.messages,
