@@ -5,6 +5,7 @@ import LoginPage from "../pages/LoginPaage";
 import ChatPage from "../pages/ChatPage";
 import RegisterPage from "../pages/RegisterPage";
 import ProfilePage from "../pages/ProfilePage";
+import LandingPage from "../pages/LandingPage";
 
 export function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuthContext();
@@ -20,7 +21,7 @@ export function PrivateRoute({ children }: { children: React.ReactNode }) {
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
 }
 
-function PublicRoute({ children }: { children: React.ReactNode }) {
+function PublicOnlyRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuthContext();
 
   if (isLoading) {
@@ -37,13 +38,13 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/" element={<LandingPage />} />
       <Route
         path="/login"
         element={
-          <PublicRoute>
+          <PublicOnlyRoute>
             <LoginPage />
-          </PublicRoute>
+          </PublicOnlyRoute>
         }
       />
 
@@ -59,9 +60,9 @@ export default function AppRoutes() {
       <Route
         path="/register"
         element={
-          <PublicRoute>
+          <PublicOnlyRoute>
             <RegisterPage />
-          </PublicRoute>
+          </PublicOnlyRoute>
         }
       />
 
