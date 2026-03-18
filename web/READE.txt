@@ -1,0 +1,13 @@
+Esse é o frontend da aplicação de chat, feito com react e TypeScript usando o vite e estilizado com
+tailwind. A aplicação é simples e organizada, focada em separar bem as responsabilidades e
+manter uma boa experiência de uso. Também utilizei docker para rodar a aplicação, mas a configuração está
+explicada no README.BUILD
+
+O sistema possui quatro páginas: Login, Register, Chat e Perofile. A autenticação é controlada com
+um contexto próprio e um hook dedicado
+
+A comunicação com a API é feita com o axios, como foi pedido no teste. Eu instanciei o axios e organizei os serviços
+na pasta services (as rots expostas na API), deixando cada responsabilidade bem isolada. Os componentes reutilizáveis
+de interface estão na pasta components/ui e os de layout em components/layout.
+
+No geral, a aplicação está estruturada de forma clara, com código reutilizável e fácil de manter

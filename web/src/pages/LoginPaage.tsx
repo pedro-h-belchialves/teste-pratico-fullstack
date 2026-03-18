@@ -9,7 +9,7 @@ import { useAuth } from "../hooks/use-auth";
 import { Button } from "../components/ui/Button";
 
 const loginSchema = z.object({
-  email: z.email("E-mail inválido"),
+  email: z.string().email("E-mail inválido"),
   password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
 });
 
