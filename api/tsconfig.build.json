@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "types": ["node"],
+    "skipLibCheck": true,
+    "strict": true,
+
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "outDir": "build",
+
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["./src/*"],
+      "@modules/*": ["./src/app/modules/*"],
+      "@domain/*": ["src/domain/*"],
+      "@application/*": ["src/application/*"],
+      "@infra/*": ["src/infra/*"],
+      "@test/*": ["src/test/*"],
+      "@generated/*": ["src/generated/*"]
+    },
+
+    "rootDirs": ["./src"],
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+
+  "include": ["src/**/*.ts"],
+
+  "exclude": ["node_modules", "build", "test"]
+}

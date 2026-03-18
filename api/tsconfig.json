@@ -13,7 +13,8 @@
       "ESNext.Iterator",
       "ESNext.Promise"
     ],
-    "module": "nodenext",
+    "module": "CommonJS",
+    "moduleResolution": "node",
     "target": "es2024",
     "baseUrl": ".",
     "paths": {
@@ -21,14 +22,13 @@
       "@application/*": ["src/application/*"],
       "@infra/*": ["src/infra/*"],
       "@test/*": ["src/test/*"],
-      "@generated/*": ["src/generated/*"]
+      "@generated/*": ["src/sgenerated/*"]
     },
 
     "strict": true,
 
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "moduleResolution": "node16"
+    "skipLibCheck": true
   },
   "include": ["src"]
 }
