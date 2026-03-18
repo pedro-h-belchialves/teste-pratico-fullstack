@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres-test
+    environment:
+      POSTGRES_USER: meuusuario
+      POSTGRES_PASSWORD: senha123
+      POSTGRES_DB: fullstack-test
+    ports:
+      - "3000:3000"
+    networks:
+      - fullstack-test-net
+
+  api:
+    build:
+      context: ./api
+    container_name: chat-api
+    ports:
+      - "4000:4000"
+    environment:
+      DATABASE_URL: postgresql://meuusuario:senha123@postgres:5432/fullstack-test?schema=public
+      PORT: 4000
+    depends_on:
+      - postgres
+    networks:
+      - fullstack-test-net
+
+  web:
+    build:
+      context: ./web
+    container_name: chat-web
+    ports:
+      - "3001:80"
+    environment:
+      VITE_API_URL: http://localhost:4000
+    depends_on:
+      - api
+    networks:
+      - fullstack-test-net
+
+networks:
+  fullstack-test-net:
+    driver: bridge
