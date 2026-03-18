@@ -1,8 +1,9 @@
 import axios from "axios";
 import { clearSession, getToken } from "../utils/storage";
 
+const baseURL = process.env.REACT_APP_API_URL || "http://localhost:4000";
 const api = axios.create({
-  baseURL: "http://localhost:4000",
+  baseURL,
   headers: {
     "Content-Type": "application/json",
   },

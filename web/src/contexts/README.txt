@@ -1,0 +1,1 @@
+Aqui é o contexto de autennticacão, ele envolve toda a applicacão pois está sendo chamado no App.txt

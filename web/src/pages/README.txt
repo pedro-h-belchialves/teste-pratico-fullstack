@@ -1,0 +1,1 @@
+Aqui estão as páginas pedidas pelo desafio, duas terão acesso sem estar logado e duas estando logdo. os acessos serão controlados pelo appRouter

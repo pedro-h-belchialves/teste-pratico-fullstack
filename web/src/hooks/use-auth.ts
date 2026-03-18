@@ -41,7 +41,7 @@ export function useAuth() {
     setError(null);
     try {
       await register(payload);
-      navigate("/login");
+      await handleLogin(payload);
     } catch (err: unknown) {
       const message = extractErrorMessage(err) || "Erro ao criar conta";
       setError(message);

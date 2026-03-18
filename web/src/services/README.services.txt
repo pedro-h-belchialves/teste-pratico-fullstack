@@ -1,0 +1,1 @@
+Nesta pasta eu chmmei todas as rotas da api, usando o api que instnciei do axios
