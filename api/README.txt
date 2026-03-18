@@ -11,6 +11,9 @@ Para mostrar domínio em modelagem, criei uma entidade abstrata Account, e a par
 O Admin tem apenas algumas rotas básicas (criar e buscar) e não tem papel direto na aplicação,
 ele foi mais para demonstrar herança e organização. Já a entidade User herda de Account e possui mais regras de negócio.
 
+Para demonstrar minhas habilidades com arquitetura, eu adicionei um serviço de agente do Oppen-ai que será executado
+caso haja uma chave no .env da api.
+
 Na parte de chat, o Chat foi tratado como um aggregate e a Message depende dele. Por isso, Message não possui
 up repositório próprio, já que ela faz parte do aggregate, o que também foi uma decisão para demonstrar
 o meu entendimento de DDD na prática...
